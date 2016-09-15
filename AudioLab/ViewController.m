@@ -72,7 +72,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    [self setPauseOnWillResignActive:false];
+    //[self setPauseOnWillResignActive:false];
     [self.graphHelper setFullScreenBounds];
     
     __block ViewController * __weak  weakSelf = self;
@@ -87,9 +87,6 @@
 //  override the GLKViewController update function, from OpenGLES
 - (void)update{
     // just plot the audio stream
-    
-    self.testNumber = [NSNumber numberWithInt:[self.testNumber intValue] + 1];
-    NSLog(@"testNum = %@", self.testNumber);
     
     // get audio stream data
     float* arrayData = malloc(sizeof(float)*BUFFER_SIZE);
@@ -107,9 +104,6 @@
     [self.fftHelper performForwardFFTWithData:arrayData
                    andCopydBMagnitudeToBuffer:fftMagnitude];
     
-    //for(int i = 0; i<BUFFER_SIZE/2; i++){
-    //    NSLog(@"ffmag = %f    %i", fftMagnitude[i],i);
-   // }
     // break up fftmagnitude into chunks
     for(int i = 0; i <  20; i+=1) {
         // NSRange *range = &((NSRange){i, i+(sizeof fftMagnitude)/20});
@@ -120,7 +114,6 @@
                 max = fftMagnitude[j];
                 
             }
-            //NSLog(@"ffmag = %f    %i", fftMagnitude[j],i);
         }
         equalizer[i] = max;
     }
@@ -148,6 +141,10 @@
 - (void)glkView:(GLKView *)view drawInRect:(CGRect)rect {
     [self.graphHelper draw]; // draw the graph
 }
+- (IBAction)dismiss:(id)sender {
+    [self dismissViewControllerAnimated:true completion:nil];
+}
+
 
 
 @end
