@@ -12,11 +12,14 @@
 
 @end
 
+
+
 @implementation TableViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    self.graphViewController = [storyboard instantiateViewControllerWithIdentifier:@"graphViewer"];
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -39,6 +42,10 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 #warning Incomplete implementation, return the number of rows
     return 1;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self presentViewController:self.graphViewController animated:true completion:nil];
 }
 
 /*

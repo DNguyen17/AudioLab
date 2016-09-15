@@ -10,7 +10,7 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="graphViewer" id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -18,14 +18,32 @@
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC" customClass="GLKView">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SpO-iq-y3T">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="48" id="DC1-8F-0sq"/>
+                                    <constraint firstAttribute="height" constant="30" id="hpP-9b-nhg"/>
+                                </constraints>
+                                <state key="normal" title="X">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="dismiss:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dw5-8c-eD7"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="SpO-iq-y3T" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="15" id="C8M-0U-iy8"/>
+                            <constraint firstItem="SpO-iq-y3T" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="20" id="Q0j-f4-zD6"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="370" y="387"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Audio Graph Menu-->
         <scene sceneID="7VW-mQ-ezK">
             <objects>
                 <tableViewController id="a0b-YM-PSz" customClass="TableViewController" sceneMemberID="viewController">
@@ -55,9 +73,6 @@
                                                 <constraint firstItem="bgt-gi-X2r" firstAttribute="top" secondItem="h0l-6t-dFT" secondAttribute="topMargin" constant="31" id="qVQ-bX-Pyy"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="BYZ-38-t0r" kind="show" identifier="graphSegue" id="oP9-Iq-Hqh"/>
-                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="kHR-JA-oCD">
                                         <rect key="frame" x="0.0" y="228" width="375" height="44"/>
@@ -83,7 +98,7 @@
                             <outlet property="delegate" destination="a0b-YM-PSz" id="VgW-m3-J3f"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="8hV-hP-OFj"/>
+                    <navigationItem key="navigationItem" title="Audio Graph Menu" id="8hV-hP-OFj"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7mi-qB-tvX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
