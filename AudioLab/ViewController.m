@@ -12,13 +12,14 @@
 #import "SMUGraphHelper.h"
 #import "FFTHelper.h"
 
-#define BUFFER_SIZE 2048*4
+#define BUFFER_SIZE 2048*8
 
 @interface ViewController ()
 @property (strong, nonatomic) Novocaine *audioManager;
 @property (strong, nonatomic) CircularBuffer *buffer;
 @property (strong, nonatomic) SMUGraphHelper *graphHelper;
 @property (strong, nonatomic) FFTHelper *fftHelper;
+@property (strong, nonatomic) NSNumber* testNumber;
 @end
 
 
@@ -33,6 +34,13 @@
     return _audioManager;
 }
 
+-(NSNumber*)testNumber{
+    if(!_testNumber){
+        _testNumber = (NSNumber*) 0;
+    }
+    return _testNumber;
+}
+
 -(CircularBuffer*)buffer{
     if(!_buffer){
         _buffer = [[CircularBuffer alloc]initWithNumChannels:1 andBufferSize:BUFFER_SIZE];
@@ -44,7 +52,7 @@
     if(!_graphHelper){
         _graphHelper = [[SMUGraphHelper alloc]initWithController:self
                                         preferredFramesPerSecond:15
-                                                       numGraphs:2
+                                                       numGraphs:3
                                                        plotStyle:PlotStyleSeparated
                                                maxPointsPerGraph:BUFFER_SIZE];
     }
@@ -64,8 +72,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    
-   
+    [self setPauseOnWillResignActive:false];
     [self.graphHelper setFullScreenBounds];
     
     __block ViewController * __weak  weakSelf = self;
@@ -81,9 +88,13 @@
 - (void)update{
     // just plot the audio stream
     
+    self.testNumber = [NSNumber numberWithInt:[self.testNumber intValue] + 1];
+    NSLog(@"testNum = %@", self.testNumber);
+    
     // get audio stream data
     float* arrayData = malloc(sizeof(float)*BUFFER_SIZE);
     float* fftMagnitude = malloc(sizeof(float)*BUFFER_SIZE/2);
+    float* equalizer = malloc(sizeof(float)*20);
     
     [self.buffer fetchFreshData:arrayData withNumSamples:BUFFER_SIZE];
     
@@ -96,12 +107,37 @@
     [self.fftHelper performForwardFFTWithData:arrayData
                    andCopydBMagnitudeToBuffer:fftMagnitude];
     
+    //for(int i = 0; i<BUFFER_SIZE/2; i++){
+    //    NSLog(@"ffmag = %f    %i", fftMagnitude[i],i);
+   // }
+    // break up fftmagnitude into chunks
+    for(int i = 0; i <  20; i+=1) {
+        // NSRange *range = &((NSRange){i, i+(sizeof fftMagnitude)/20});
+        
+        float max = -2000000;
+        for(int j = i*BUFFER_SIZE/40; j < (i+1)*BUFFER_SIZE/40; j+=1) {
+            if(fftMagnitude[j] > max){
+                max = fftMagnitude[j];
+                
+            }
+            //NSLog(@"ffmag = %f    %i", fftMagnitude[j],i);
+        }
+        equalizer[i] = max;
+    }
+    
+    
     // graph the FFT Data
     [self.graphHelper setGraphData:fftMagnitude
                     withDataLength:BUFFER_SIZE/2
                      forGraphIndex:1
                  withNormalization:64.0
                      withZeroValue:-60];
+    
+    [self.graphHelper setGraphData:equalizer
+                    withDataLength:20
+                     forGraphIndex:2
+                 withNormalization:48.0
+                     withZeroValue:0];
     
     [self.graphHelper update]; // update the graph
     free(arrayData);
